@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Parsed Resume Page</title>
+</head>
+
+<body>
+   <h1>Parsed Resume Interface</h1>
+   <div>
+      <form method="POST" action="/api/v1/cv/parse" enctype="multipart/form-data">
+         <table border="0">
+            <tr>
+               <td><label for="uploadedCV">Edit your resume here : </label></td>
+            </tr>
+            <% if(locals.name){ %>
+            <tr>
+               <td><label for="name"> Name: </label></td>
+               <td><input type="text" name="name" value="<%=name %>" /></td>
+            </tr>
+            <% } %>
+            <% if(locals.email){ %>
+            <tr>
+               <td><label for="email"> Email: </label></td>
+               <td><input type="text" name="email" value="<%=email %>" /></td>
+            </tr>
+            <% } %>
+            <% if(locals.phone){ %>
+            <tr>
+               <td><label for="phone"> Phone: </label></td>
+               <td><input type="text" name="phone" value=<%=phone %> /></td>
+            </tr>
+            <% } %>
+            <% if(locals.profiles){ %>
+            <tr>
+               <td><label for="profiles"> Profiles: </label></td>
+               <td><input type="text" name="profiles" value="<%=profiles %>" /></td>
+            </tr>
+            <% } %>
+            <% if(locals.skills){ %>
+            <tr>
+               <td><label for="skills"> Skills: </label></td>
+               <td><textarea name="skills" cols="50" rows="5"  ><%=skills %></textarea></td>
+            </tr>
+            <% } %>
+            <% if(locals.education){ %>
+               <tr>
+               <td><label for="education"> Education: </label></td>
+               <td><textarea name="education" cols="50" rows="5" ><%=education %></textarea></td>
+            </tr>
+            <% } %>
+            <% if(locals.certification){ %>
+            <tr>
+               <td><label for="certification"> Certification: </label></td>
+               <td><textarea name="certification"  cols="50" rows="5"  ><%=certification %></textarea></td>
+            </tr>
+            <% } %>
+            <% if(locals.additional){ %>
+               <tr>
+                  <td><label for="additional"> additional: </label></td>
+                  <td><textarea name="additional"  cols="50" rows="5"  ><%=additional %></textarea></td>
+               </tr>
+               <% } %>
+
+            <% if(locals.interests){ %>
+               <tr>
+                  <td><label for="interests"> interests: </label></td>
+                  <td><textarea name="interests"  cols="50" rows="5"  ><%=interests %></textarea></td>
+               </tr>
+               <% } %>
+   
+            <% if(locals.positions){ %>
+               <tr>
+                  <td><label for="positions"> positions: </label></td>
+                  <td><textarea name="positions"  cols="50" rows="5"  ><%=positions %></textarea></td>
+               </tr>
+               <% } %>
+            <% if(locals.honors){ %>
+               <tr>
+                  <td><label for="honors"> honors: </label></td>
+                  <td><textarea name="honors"  cols="50" rows="5"  ><%=honors %></textarea></td>
+               </tr>
+            <% } %>
+            <% if(locals.awards){ %>
+               <tr>
+                  <td><label for="awards"> awards: </label></td>
+                  <td><textarea name="awards"  cols="50" rows="5"  ><%=awards %></textarea></td>
+               </tr>
+            <% } %>
+            <% if(locals.contacts){ %>
+               <tr>
+                  <td><label for="contacts"> contacts: </label></td>
+                  <td><textarea name="contacts"  cols="50" rows="5"  ><%=contacts %></textarea></td>
+               </tr>
+            <% } %>
+            <% if(locals.links){ %>
+               <tr>
+                  <td><label for="links"> links: </label></td>
+                  <td><textarea name="links"  cols="50" rows="5"  ><%=links %></textarea></td>
+               </tr>
+            <% } %>
+            <% if(locals.projects){ %>
+               <tr>
+                  <td><label for="projects"> projects: </label></td>
+                  <td><textarea name="projects"  cols="50" rows="5"  ><%=projects %></textarea></td>
+               </tr>
+            <% } %>
+            <% if(locals.courses){ %>
+               <tr>
+                  <td><label for="courses"> courses: </label></td>
+                  <td><textarea name="courses"  cols="50" rows="5"  ><%=courses %></textarea></td>
+               </tr>
+            <% } %>
+            <% if(locals.languages){ %>
+               <tr>
+                  <td><label for="languages"> languages: </label></td>
+                  <td><textarea name="languages"  cols="50" rows="5"  ><%=languages %></textarea></td>
+               </tr>
+            <% } %>
+            <% if(locals.experience){ %>
+               <tr>
+                  <td><label for="experience"> experience: </label></td>
+                  <td><textarea name="experience"  cols="50" rows="5"  ><%=experience %></textarea></td>
+               </tr>
+            <% } %>
+            <% if(locals.summary){ %>
+               <tr>
+                  <td><label for="summary"> summary: </label></td>
+                  <td><textarea name="summary"  cols="50" rows="5"  ><%=summary %></textarea></td>
+               </tr>
+            <% } %>
+            <% if(locals.objective){ %>
+               <tr>
+                  <td><label for="objective"> Objective: </label></td>
+                  <td><textarea name="objective"  cols="50" rows="5"  ><%=objective %></textarea></td>
+               </tr>
+            <% } %>
+            <% if(locals.miscellaneous){ %>
+               <tr>
+                  <td><label for="miscellaneous"> Miscellaneous: </label></td>
+                  <td><textarea name="miscellaneous"  cols="50" rows="5"  ><%=miscellaneous %></textarea></td>
+               </tr>
+            <% } %>
+            <tr>
+               <td></td>
+               <td><input type="submit" value="Save Details" /></td>
+            </tr>
+         </table>
+      </form>
+   </div>
+   <div>
+      <h3>
+         <%= message %>
+      </h3>
+   </div>
+   <div>
+      <% if(locals.errors) {%>
+         <% errors.forEach((error)=> { %>
+            <h4 style="color:red">
+               <%= error.msg %>
+            </h4><br />
+            <% }) %>
+               <% } %>
+   </div>
+</body>
+
+</html>
