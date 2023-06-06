@@ -17,7 +17,7 @@ const cors = require('cors');
 // const cvServerIp = '127.0.0.1'
 // const cvServerIp = '43.204.140.82'
 
-const cvServerPort = '6000'
+const cvServerPort = '5000'
 
 cvApp.use(xss());
 cvApp.use(cors());
