@@ -15,7 +15,7 @@ const hpp = require('hpp');
 const cors = require('cors');
 
 // const cvServerIp = '127.0.0.1'
-const cvServerIp = '43.204.140.82'
+// const cvServerIp = '43.204.140.82'
 
 const cvServerPort = '6000'
 
@@ -53,6 +53,6 @@ cvApp.use('/callback', require('./routes/callback.js'));
       .createServer(cvApp)
       .listen(
         cvServerPort,
-        cvServerIp,
+        // cvServerIp,
         console.log('debug', `HTTP:Server running on  ${cvServerPort}`)
       );
