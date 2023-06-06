@@ -26,7 +26,7 @@ let dictionary = ['objective', 'objectives','introduction','Career Profile','sum
  'social-profiles',
  'social profiles',
 'awards','accomplishments',
-'honors',          'additional','the other stuff','THE OTHER STUFF',
+'honors', 'additional','the other stuff','THE OTHER STUFF',
 'certification', 'certifications',
 'interests','hobbies','{end}']
 const lowercaseDictionary = [];
@@ -46,10 +46,10 @@ router.get('/parse', async function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'public', 'parseresume.html'));
 });
 
-router.get('/filepicker', async function (req, res) {
-  res.sendFile(path.join(__dirname, '..', 'public', 'helloworld.html'));
-});
-router.post('/api/v1/parse', async (req, res) => {
+// router.get('/filepicker', async function (req, res) {
+//   res.sendFile(path.join(__dirname, '..', 'public', 'helloworld.html'));
+// });
+router.post('/parse', async (req, res) => {
   // if (!req.files || Object.keys(req.files).length === 0) {
   //   //empty "File" field in form-data of POST
   //   res.status(404).send('No file was found for upload');
@@ -73,7 +73,7 @@ router.post('/api/v1/parse', async (req, res) => {
       .parseResumeFile(tempFilePath, './files') // input file, output dir
       .then(file => {
         // console.log("Yay! " + file);
-        var allRows = fs.readFileSync(path.join(__dirname,'..','..','PARSED','temp.txt')).toString().split("\n");
+        var allRows = fs.readFileSync(path.join(__dirname,'..','PARSED','temp.txt')).toString().split("\n");
         console.log('reading from intermediatee parsed file')
   
         let jsonData = fs.readFileSync(`./files/${file}.json`)
@@ -146,7 +146,7 @@ router.post('/api/v1/parse', async (req, res) => {
         ResumeParser
         .parseResumeFile(tempFilePath, './files') // input file, output dir
         .then(file => {
-          var allRows = fs.readFileSync(path.join(__dirname,'..','..','PARSED','temp.txt')).toString().split("\n");
+          var allRows = fs.readFileSync(path.join(__dirname,'..','PARSED','temp.txt')).toString().split("\n");
           console.log('reading from intermediatee parsed file')
   
           let jsonData = fs.readFileSync(`./files/${file}.json`)
