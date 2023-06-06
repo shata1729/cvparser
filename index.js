@@ -14,8 +14,10 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
 
-const cvServerIp = '127.0.0.1'
-const cvServerPort = '5006'
+// const cvServerIp = '127.0.0.1'
+const cvServerIp = '43.204.140.82'
+
+const cvServerPort = '6000'
 
 cvApp.use(xss());
 cvApp.use(cors());
