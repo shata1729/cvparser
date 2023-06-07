@@ -9,7 +9,12 @@
 
   <body>
     <h1>Upload Resume Interface</h1>
-    <form method="POST" action="/cv/parse" enctype="multipart/form-data">
+    <form
+      method="POST"
+      action="/cv/parse"
+      enctype="multipart/form-data"
+      id="form1"
+    >
       <table border="0">
         <tr>
           <td><label for="uploadedCV">Upload your resume here :</label></td>
@@ -17,17 +22,237 @@
         </tr>
         <tr>
           <td>
+            <label for="authorize_button">
+              Pick already existing file from google drive
+            </label>
+          </td>
+          <td>
+            <button id="authorize_button" onclick="handleAuthClick()">Pick file from google drive</button>        
+          </td>
+        </tr>
+        <!-- <tr> -->
+          <!-- <td>
             <label for="googleDriveLink">
               Paste your resume link from google drive :
             </label>
+          </td> -->
+          <pre id="content" style="white-space: pre-wrap;"></pre>
+
+          <td>
+            <input type="hidden" name="googleDriveLink" id="googleDriveLink" />
           </td>
-          <td><input type="text" name="googleDriveLink" /></td>
-        </tr>
+        <!-- </tr> -->
         <tr>
           <td></td>
           <td><input type="submit" value="Create Profile" /></td>
         </tr>
       </table>
     </form>
+    </button>
+    <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
+
+    <pre id="content" style="white-space: pre-wrap;"></pre>
+
+    <script type="text/javascript">
+      /* exported gapiLoaded */
+      /* exported gisLoaded */
+      /* exported handleAuthClick */
+      /* exported handleSignoutClick */
+
+      // Authorization scopes required by the API; multiple scopes can be
+      // included, separated by spaces.
+      const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly'
+
+      // TODO(developer): Set to client ID and API key from the Developer Console
+
+      const API_KEY = 'AIzaSyC61W6ddtbFyBc7DYc2bZ0t7NbjG4wskZc'
+
+      const CLIENT_ID =
+        '792709622801-hppqp3hc68nufujgemr96vknhea6qnp6.apps.googleusercontent.com'
+
+      // TODO(developer): Replace with your own project number from console.developers.google.com.
+      const APP_ID = 'getfileapi'
+
+      let tokenClient
+      let accessToken = null
+      let pickerInited = false
+      let gisInited = false
+
+      document.getElementById('authorize_button').style.visibility = 'visible'
+      document.getElementById('signout_button').style.visibility = 'hidden'
+
+      /**
+       * Callback after api.js is loaded.
+       */
+      function gapiLoaded() {
+        gapi.load('client:picker', initializePicker)
+      }
+
+      /**
+       * Callback after the API client is loaded. Loads the
+       * discovery doc to initialize the API.
+       */
+      async function initializePicker() {
+        await gapi.client.load(
+          'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
+        )
+        pickerInited = true
+        maybeEnableButtons()
+      }
+
+      /**
+       * Callback after Google Identity Services are loaded.
+       */
+      function gisLoaded() {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID,
+          scope: SCOPES,
+          callback: '', // defined later
+        })
+        gisInited = true
+        // maybeEnableButtons()
+      }
+
+      /**
+       * Enables user interaction after all libraries are loaded.
+       */
+      function maybeEnableButtons() {
+        if (pickerInited && gisInited) {
+          document.getElementById('authorize_button').style.visibility =
+            'visible'
+        }
+      }
+
+      /**
+       *  Sign in the user upon button click.
+       */
+      function handleAuthClick() {
+        tokenClient.callback = async (response) => {
+          if (response.error !== undefined) {
+            throw response
+          }
+          accessToken = response.access_token
+          // document.getElementById('signout_button').style.visibility = 'visible'
+          // document.getElementById('authorize_button').innerText = 'Refresh'
+          await createPicker()
+        }
+
+        if (accessToken === null) {
+          // Prompt the user to select a Google Account and ask for consent to share their data
+          // when establishing a new session.
+          tokenClient.requestAccessToken({ prompt: 'consent' })
+        } else {
+          // Skip display of account chooser and consent dialog for an existing session.
+          tokenClient.requestAccessToken({ prompt: '' })
+        }
+      }
+
+      /**
+       *  Sign out the user upon button click.
+       */
+      function handleSignoutClick() {
+        if (accessToken) {
+          accessToken = null
+          google.accounts.oauth2.revoke(accessToken)
+          document.getElementById('content').innerText = ''
+          document.getElementById('authorize_button').innerText = 'Authorize'
+          document.getElementById('signout_button').style.visibility = 'hidden'
+        }
+      }
+
+      /**
+       *  Create and render a Picker object for searching images.
+       */
+      function createPicker() {
+        const view = new google.picker.View(google.picker.ViewId.DOCS)
+        view.setMimeTypes(
+          'application/vnd.google-apps.document,application/vnd.google-apps.file,application/pdf,application/rdf,application/vnd.google-apps.folder',
+        )
+        // view.setMimeTypes('image/png,image/jpeg,image/jpg')
+        const picker = new google.picker.PickerBuilder()
+          .enableFeature(google.picker.Feature.NAV_HIDDEN)
+          .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+          .setDeveloperKey(API_KEY)
+          .setAppId(APP_ID)
+          .setOAuthToken(accessToken)
+          .addView(view)
+          .addView(new google.picker.DocsUploadView())
+          .setCallback(pickerCallback)
+          .build()
+        picker.setVisible(true)
+      }
+
+      /**
+       * Displays the file details of the user's selection.
+       * @param {object} data - Containers the user selection from the picker
+       */
+      async function pickerCallback(data) {
+        if (data.action === google.picker.Action.PICKED) {
+          let text = `Picker response: \n${JSON.stringify(data, null, 2)}\n`
+          console.log('data.docs[0].url')
+          console.log(data.docs[0].url)
+          const form1 = document.getElementById('form1')
+          const txtGoogleDriveLink = document.getElementById('googleDriveLink')
+          txtGoogleDriveLink.value = data.docs[0].url
+          console.log(form1)
+          console.log(txtGoogleDriveLink)
+          console.log(txtGoogleDriveLink.value)
+          form1.method = 'post'
+          form1.action = '/cv/parse'
+          document.getElementById('form1').style.visibility = 'hidden'
+          document.getElementById('authorize_button').style.visibility =
+            'hidden'
+          form1.submit()
+          // const hidden_form = document.createElement('form')
+
+          // // Set method to post by default
+          // hidden_form.method = method || 'post'
+
+          // // Set path
+          // hidden_form.action = path
+
+          // for (const key in params) {
+          //   if (params.hasOwnProperty(key)) {
+          //     const hidden_input = document.createElement('input')
+          //     hidden_input.type = 'hidden'
+          //     hidden_input.name = key
+          //     hidden_input.value = params[key]
+
+          //     hidden_form.appendChild(hidden_input)
+          //   }
+          // }
+
+          // document.body.appendChild(hidden_form)
+          // hidden_form.submit()
+
+          // const document = data[google.picker.Response.DOCUMENTS][0]
+          // const fileId = document[google.picker.Document.ID]
+          // console.log(fileId)
+          // const res = await gapi.client.drive.files.get({
+          //   fileId: fileId,
+          //   fields: '*',
+          // })
+          // text += `Drive API response for first document: \n${JSON.stringify(
+          //   res.result,
+          //   null,
+          //   2,
+          // )}\n`
+
+          // window.document.getElementById('content').innerText = text
+        }
+      }
+    </script>
+    <script
+      async
+      defer
+      src="https://apis.google.com/js/api.js"
+      onload="gapiLoaded()"
+    ></script>
+    <script
+      async
+      defer
+      src="https://accounts.google.com/gsi/client"
+      onload="gisLoaded()"
+    ></script>
   </body>
 </html>
