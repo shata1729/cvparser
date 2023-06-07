@@ -46,9 +46,9 @@ router.get('/parse', async function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'public', 'parseresume.html'));
 });
 
-// router.get('/filepicker', async function (req, res) {
-//   res.sendFile(path.join(__dirname, '..', 'public', 'helloworld.html'));
-// });
+router.get('/filepicker', async function (req, res) {
+  res.sendFile(path.join(__dirname, '..', 'public', 'helloworld.html'));
+});
 router.post('/parse', async (req, res) => {
   // if (!req.files || Object.keys(req.files).length === 0) {
   //   //empty "File" field in form-data of POST
