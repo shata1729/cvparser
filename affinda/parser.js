@@ -1,13 +1,14 @@
-const { AffindaCredential, AffindaAPI } = require('@affinda/affinda')
+// const { AffindaCredential, AffindaAPI } = require('@affinda/affinda')
 const fs = require('fs')
 
-const credential = new AffindaCredential(
-  'aff_9b2f4d8a28c11eedc88bdeb091e6e54c6f63cf54',
-)
-const client = new AffindaAPI(credential)
+// const credential = new AffindaCredential(
+//   'aff_9b2f4d8a28c11eedc88bdeb091e6e54c6f63cf54',
+// )
+// const client = new AffindaAPI(credential)
 
-const readStream = fs.createReadStream('./resumeJulesSmith.pdf')
+// const readStream = fs.createReadStream('./resumeJulesSmith.pdf')
 
+// console.log(readStream)
 // https://docs.google.com/uc?id=1OVaiDi4NtjoKy589r_vqw5wjPHzbWilM&export=download`
 // client.createDocument({url:`https://docs.google.com/uc?id=1OVaiDi4NtjoKy589r_vqw5wjPHzbWilM&export=download`,collection:'pBIoVbBR'}).then((result) => {
 
@@ -27,7 +28,7 @@ client.createDocument({file: readStream,collection:'pBIoVbBR'}).then(async(resul
 });
 
 */
-const data = require('./temp.js')
+// const data = require('./temp.js')
 
 const getParsedResumeJson = async (data) => {
   return new Promise((res, rej) => {
@@ -36,9 +37,17 @@ const getParsedResumeJson = async (data) => {
       logger.log('error', 'no data received for getParsedResumeJson')
       return res(null)
     }
+    console.log("all raw data")
+    console.log(data)
     if (data.name) {
       resume.firstName = data.name?.first
       resume.lastName = data.name?.last
+    }
+    if(data.languages?.length){
+      resume.languages = data.languages
+    }
+    if(data.rawText){
+      resume.rawText = data.rawText
     }
     resume.phoneNumbers = []
     if (data.phoneNumbers.length) {
@@ -82,6 +91,7 @@ const getParsedResumeJson = async (data) => {
     resume.workExperience = []
     if (data.workExperience.length) {
       data.workExperience.forEach((we) => {
+        let i=1;
         resume.workExperience.push({
           organization: we.organization ? we.organization : '',
           jobTitle: we.jobTitle ? we.jobTitle : '',
@@ -96,10 +106,20 @@ const getParsedResumeJson = async (data) => {
       })
     }
 
+    resume.personalDetails = []
+    if (data.sections.length) {
+      data.sections.forEach((section) => {
+        let i=1;
+        if(section.sectionType == 'PersonalDetails'){
+          resume.personalDetails.push(section.text)
+        }
+      })
+    }
+
     resume.skills = []
     if (data.skills?.length) {
       data.skills.forEach(({ name, type }) => {
-        resume.skills.push({ name, type })
+        resume.skills.push(name)
       })
     }
 
@@ -108,15 +128,16 @@ const getParsedResumeJson = async (data) => {
     resume.referees = data.referees
     resume.isResumeProbability = data.isResumeProbability
 
-    return res(resume)
+    console.log(resume)
+    return res(resume);
   }) // End of promise
 }
-const main = async () => {
-  let parsedRsume = await getParsedResumeJson(data)
-  console.log(parsedRsume)
-}
+// const main = async () => {
+//   let parsedRsume = await getParsedResumeJson(data)
+//   // console.log(parsedRsume)
+// }
 
-main()
+// main()
 
 // // Can also use a URL:
 
@@ -127,3 +148,5 @@ main()
 //     console.log("An error occurred:");
 //     console.error(err);
 // });
+
+module.exports = {getParsedResumeJson}
