@@ -72,12 +72,6 @@
 
                </tr>
             <% } %>
-            <% if(data.summary){ %>
-               <tr>
-                  <td><label for="summary"> Summary: </label></td>
-                  <td><textarea name="summary" cols="50" rows="5" ><%=data.summary %></textarea></td>
-               </tr>
-            <% } %>      
             
             <% if(data.profession){ %>
                <tr>
@@ -103,7 +97,16 @@
                   <td><input type="text" name="languages" value="<%=data.languages.toString() %>"  size="50" /></td>
                </tr>
             <% } %>
-   
+
+            <% if(data.location) {%>
+                  <tr>
+                     <td><label for="location"> Location : </label></td>
+                     <td><textarea name="location" cols="50" rows="4" >Country:<%=data.location.country %>&#13;&#10;State: :<%=data.location.state %>&#13;&#10;City: <%=data.location.city %>&#13;&#10;Postal Code: <%=data.location.postalCode %>                     
+                     </textarea></td>
+                  </tr>
+
+            <% } %>
+
             <% if(data.websites.length){ %>
                <tr>
                   <td><label for="websites"> websites: </label></td>
@@ -154,11 +157,17 @@
                      <tr>
                         <td><label for="education"> Education <%=data.education.indexOf(edu)+1 %>: </label></td>
                         <% i++ %>
-                        <td><textarea name="education<%=data.education.indexOf(edu)+1 %>" cols="50" rows="5" >Organization:<%=edu.organization %>&#13;&#10;Job Title:<%=edu.degree %>&#13;&#10;Grade: <%=edu.grade %>&#13;&#10;Period: <%=edu.period %>&#13;&#10;Location: <%=edu.location %>&#13;&#10;                     
+                        <td><textarea name="education<%=data.education.indexOf(edu)+1 %>" cols="50" rows="5" >Organization:<%=edu.organization %>&#13;&#10;Degree:<%=edu.degree.toString() %>&#13;&#10;Grade: <%=edu.grade.toString() %>&#13;&#10;Period: <%=edu.period %>&#13;&#10;Location: <%=edu.location %>&#13;&#10;                     
                         </textarea></td>
                      </tr>   
                   <% }) %>
                <% } %>
+               <% if(data.summary?.length){ %>
+                  <tr>
+                     <td><label for="summary"> Summary: </label></td>
+                     <td><textarea name="summary" cols="50" rows="5" ><%=data.summary.toString() %></textarea></td>
+                  </tr>
+               <% } %>      
                <% if(data.rawText){ %>
                   <tr>
                      <td><label for="rawText"> Miscellaneous Information: </label></td>

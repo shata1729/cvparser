@@ -38,7 +38,7 @@ const getParsedResumeJson = async (data) => {
       return res(null)
     }
     console.log("all raw data")
-    console.log(data)
+    console.log(data.education)
     if (data.name) {
       resume.firstName = data.name?.first
       resume.lastName = data.name?.last
@@ -62,7 +62,6 @@ const getParsedResumeJson = async (data) => {
     resume.dateOfBirth = data.dateOfBirth ? data.dateOfBirth : ''
     resume.location = data.location ? data.location : ''
     resume.objective = data.objective
-    resume.summary = data.summary
     resume.totalYearsExperience = data.totalYearsExperience
     resume.education = []
     if (data.education.length) {
@@ -76,7 +75,7 @@ const getParsedResumeJson = async (data) => {
               ? edu.accreditation?.educationLevel
               : ''
           }`,
-          grade: edu.grade ? edu.grade : '',
+          grade: edu.grade?.value ? edu.grade.value : '',
           location: edu.location?.formatted ? edu.location?.formatted : '',
           period: edu.dates?.rawText ? edu.dates?.rawText : '',
         })
@@ -85,9 +84,10 @@ const getParsedResumeJson = async (data) => {
 
     resume.profession = data.profession ? data.profession : ''
     resume.linkedin = data.linkedin ? data.linkedin : ''
-    resume.summary = data.summary
-    resume.summary = data.summary
-
+    resume.location = {postalCode:data.location?.postalCode,
+      state:data.location?.state,
+      country:data.location?.country,
+      city:data.location?.city}
     resume.workExperience = []
     if (data.workExperience.length) {
       data.workExperience.forEach((we) => {
@@ -107,11 +107,15 @@ const getParsedResumeJson = async (data) => {
     }
 
     resume.personalDetails = []
+    resume.summary = []
     if (data.sections.length) {
       data.sections.forEach((section) => {
         let i=1;
         if(section.sectionType == 'PersonalDetails'){
           resume.personalDetails.push(section.text)
+        }
+        if(section.sectionType == 'Summary'){
+          resume.summary.push(section.text)
         }
       })
     }
@@ -128,7 +132,7 @@ const getParsedResumeJson = async (data) => {
     resume.referees = data.referees
     resume.isResumeProbability = data.isResumeProbability
 
-    console.log(resume)
+    // console.log(resume)
     return res(resume);
   }) // End of promise
 }
