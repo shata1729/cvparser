@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/shata1729/cvparser#readme",
   "dependencies": {
+    "@affinda/affinda": "^6.9.0",
+    "api": "^5.0.8",
     "cors": "^2.8.5",
     "download": "^8.0.0",
     "ejs": "^3.1.9",

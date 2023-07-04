@@ -13,28 +13,31 @@
    <div>
       <form method="POST" action="/cv/parse" enctype="multipart/form-data">
          <% if(locals.data){ %>
-
          <table border="0">
             <tr>
                <td><label for="uploadedCV">Edit your resume here : </label></td>
-            </tr>
-            <!-- <%
-            console.log(locals.data)
-            if(locals.data){
-               let {firstName, lastName, phoneNumbers, emails, websites, dateOfBirth, location, objective, summary, totalYearsExperience, education, profession, linkedin, workExperience, skills, certifications, publications, referees, isResumeProbability} = locals.data
-            } 
-            %> -->
-                        
+            </tr>                        
             <% if(data.firstName){ %>
             <tr>
                <td><label for="firstName"> First Name: </label></td>
                <td><input type="text" name="firstName" value="<%=data.firstName %>" size="50" /></td>
             </tr>
+            <% } else { %>
+               <tr>
+                  <td><label for="firstName"> First Name: </label></td>
+                  <td><input type="text" name="firstName" value="" size="50" /></td>
+               </tr>
+   
             <% } %>
             <% if(data.lastName){ %>
                <tr>
                   <td><label for="lastName"> Last Name: </label></td>
                   <td><input type="text" name="lastName" value="<%=data.lastName %>" size="50"/></td>
+               </tr>
+            <% } else {%>
+               <tr>
+                  <td><label for="lastName"> Last Name: </label></td>
+                  <td><input type="text" name="lastName" value="" size="50"/></td>
                </tr>
             <% } %>
             <% if(data.dateOfBirth){ %>
@@ -42,12 +45,16 @@
                   <td><label for="dateOfBirth"> Date of Birth: </label></td>
                   <td><input type="text" name="dateOfBirth" value="<%=data.dateOfBirth %>" size="50"/></td>
                </tr>
+            <% } else { %>
+               <tr>
+                  <td><label for="dateOfBirth"> Date of Birth: </label></td>
+                  <td><input type="text" name="dateOfBirth" value="" size="50"/></td>
+               </tr>               
             <% } %>
             <% if(data.phoneNumbers?.length) {%>
                <% data.phoneNumbers.forEach((phone)=> { 
                   let i=1;
-                  if(phone.nationalNumber){
-                        
+                  if(phone.nationalNumber){    
                   %>
                   <tr>
                      <td><label for="education"> Phone Number <%=data.phoneNumbers.indexOf(phone)+1 %>: </label></td>
@@ -56,33 +63,55 @@
                      </textarea></td>
                   </tr>   
                <% }}) %>
+            <% } else { %>
+               <tr>
+                  <td><label for="education"> Phone Number 1: </label></td>
+                  <td><textarea name="education1" cols="50" rows="2" >Country Code:&#13;&#10;Phone Number:
+                  </textarea></td>
+               </tr>   
             <% } %>
-
             <% if(data.objective){ %>
                <tr>
                   <td><label for="objective"> Objective: </label></td>
                   <td><textarea name="objective" cols="50" rows="5" ><%=data.objective %></textarea></td>
-
                </tr>
-            <% } %>
+            <% } else { %>
+               <tr>
+                  <td><label for="objective"> Objective: </label></td>
+                  <td><textarea name="objective" cols="50" rows="5" ></textarea></td>
+               </tr>
+            <% } %>            
             <% if(data.personalDetails){ %>
                <tr>
                   <td><label for="personalDetails"> Personal Details: </label></td>
                   <td><textarea name="personalDetails" cols="50" rows="4" ><%=data.personalDetails %></textarea></td>
-
                </tr>
-            <% } %>
-            
+            <% } else { %>
+               <tr>
+                  <td><label for="personalDetails"> Personal Details: </label></td>
+                  <td><textarea name="personalDetails" cols="50" rows="4" ></textarea></td>
+               </tr>
+            <% } %>            
             <% if(data.profession){ %>
                <tr>
                   <td><label for="profession"> Profession: </label></td>
                   <td><input type="text" name="profession" value="<%=data.profession %>"  size="50" /></td>
                </tr>
+            <% } else { %>
+               <tr>
+                  <td><label for="profession"> Profession: </label></td>
+                  <td><input type="text" name="profession" value=""  size="50" /></td>
+               </tr>               
             <% } %>
             <% if(data.linkedin){ %>
                <tr>
                   <td><label for="linkedin"> Linkedin: </label></td>
                   <td><input type="text" name="linkedin" value="<%=data.linkedin %>"  size="50" /></td>
+               </tr>
+            <% } else {%>
+               <tr>
+                  <td><label for="linkedin"> Linkedin: </label></td>
+                  <td><input type="text" name="linkedin" value=""  size="50" /></td>
                </tr>
             <% } %>
             <% if(data.emails.length){ %>
@@ -90,45 +119,78 @@
                <td><label for="emails"> Email: </label></td>
                <td><input type="text" name="emails" value="<%=data.emails.toString() %>"  size="50" /></td>
             </tr>
+            <% } else { %>
+               <tr>
+                  <td><label for="emails"> Email: </label></td>
+                  <td><input type="text" name="emails" value=""  size="50" /></td>
+               </tr>
             <% } %>
             <% if(data.languages.length){ %>
                <tr>
                   <td><label for="languages"> Languages: </label></td>
                   <td><input type="text" name="languages" value="<%=data.languages.toString() %>"  size="50" /></td>
                </tr>
+            <% } else { %>
+               <tr>
+                  <td><label for="languages"> Languages: </label></td>
+                  <td><input type="text" name="languages" value=""  size="50" /></td>
+               </tr>
             <% } %>
-
-            <% if(data.location) {%>
+            <% if(data.location) { %>
                   <tr>
                      <td><label for="location"> Location : </label></td>
                      <td><textarea name="location" cols="50" rows="4" >Country:<%=data.location.country %>&#13;&#10;State: :<%=data.location.state %>&#13;&#10;City: <%=data.location.city %>&#13;&#10;Postal Code: <%=data.location.postalCode %>                     
                      </textarea></td>
                   </tr>
-
+            <% } else { %>
+               <tr>
+                  <td><label for="location"> Location : </label></td>
+                  <td><textarea name="location" cols="50" rows="4" >Country:&#13;&#10;State: :&#13;&#10;City: &#13;&#10;Postal Code:                      
+                  </textarea></td>
+               </tr>
             <% } %>
-
             <% if(data.websites.length){ %>
                <tr>
                   <td><label for="websites"> websites: </label></td>
                   <td><input type="text" name="websites" value="<%=data.websites.toString() %>" size="50" /></td>
                </tr>
-            <% } %>      
+            <% } else { %>
+               <tr>
+                  <td><label for="websites"> websites: </label></td>
+                  <td><input type="text" name="websites" value="" size="50" /></td>
+               </tr>
+            <% } %>
             <% if(data.skills.length){ %>
                <tr>
                   <td><label for="skills"> Skills: </label></td>
                   <td><textarea name="skills" cols="50" rows="5" ><%=data.skills.toString('\n') %></textarea></td>
                </tr>
-            <% } %>
-            <% if(data.certifications.length){ %>
+            <% } else { %>
                <tr>
-                  <td><label for="certifications"> certifications: </label></td>
+                  <td><label for="skills"> Skills: </label></td>
+                  <td><textarea name="skills" cols="50" rows="5" ></textarea></td>
+               </tr>
+            <% } %>
+            <% if(data.certifications?.length){ %>
+               <tr>
+                  <td><label for="certifications"> Certifications: </label></td>
                   <td><textarea name="certifications" cols="50" rows="5" ><%=data.certifications.toString() %></textarea></td>
+               </tr>
+            <% } else { %>
+               <tr>
+                  <td><label for="certifications"> Certifications: </label></td>
+                  <td><textarea name="certifications" cols="50" rows="5" ></textarea></td>
                </tr>
             <% } %>
             <% if(data.publications.length){ %>
                <tr>
-                  <td><label for="publications"> certifications: </label></td>
+                  <td><label for="publications"> Publications: </label></td>
                   <td><textarea name="publications" cols="50" rows="5" ><%=data.publications.toString() %></textarea></td>
+               </tr>
+            <% } else { %>
+               <tr>
+                  <td><label for="publications"> Publications: </label></td>
+                  <td><textarea name="publications" cols="50" rows="5" ></textarea></td>
                </tr>
             <% } %>
             <% if(data.totalYearsExperience){ %>
@@ -136,9 +198,13 @@
                   <td><label for="totalYearsExperience"> Total Years Experience: </label></td>
                   <td><input type="text" name="totalYearsExperience" value="<%=data.totalYearsExperience %>"  size="50" /></td>
                </tr>
+            <% } else { %>
+               <tr>
+                  <td><label for="totalYearsExperience"> Total Years Experience: </label></td>
+                  <td><input type="text" name="totalYearsExperience" value=""  size="50" /></td>
+               </tr>
             <% } %>
-
-            <% if(data.workExperience?.length) {%>
+            <% if(data.workExperience?.length) { %>
                <% data.workExperience?.forEach((experience)=> { 
                   let i=1;%>
                   <tr>
@@ -147,10 +213,14 @@
                      <td><textarea name="workExperience<%=data.workExperience.indexOf(experience)+1 %>" cols="50" rows="5" >Organization:<%=experience.organization %>&#13;&#10;Job Title:<%=experience.jobTitle %>&#13;&#10;Job Description: <%=experience.jobDescription %>&#13;&#10;Period: <%=experience.period %>&#13;&#10;Location: <%=experience.location %>&#13;&#10;                     
                      </textarea></td>
                   </tr>
-
                   <% }) %>
+               <% } else { %>
+                  <tr>
+                     <td><label for="workExperience"> Experience 1 : </label></td>
+                     <td><textarea name="workExperience1" cols="50" rows="5" >Organization:&#13;&#10;Job Title:&#13;&#10;Job Description: &#13;&#10;Period: &#13;&#10;Location: &#13;&#10;                     
+                     </textarea></td>
+                  </tr>
                <% } %>
-
                <% if(data.education?.length) {%>
                   <% data.education.forEach((edu)=> { 
                      let i=1;%>
@@ -161,18 +231,33 @@
                         </textarea></td>
                      </tr>   
                   <% }) %>
+               <% } else { %>
+                  <tr>
+                     <td><label for="education"> Education 1: </label></td>
+                     <td><textarea name="education1 %>" cols="50" rows="5" >Organization:&#13;&#10;Degree:&#13;&#10;Grade: &#13;&#10;Period: &#13;&#10;Location: &#13;&#10;                     
+                     </textarea></td>
+                  </tr>   
                <% } %>
                <% if(data.summary?.length){ %>
                   <tr>
                      <td><label for="summary"> Summary: </label></td>
                      <td><textarea name="summary" cols="50" rows="5" ><%=data.summary.toString() %></textarea></td>
                   </tr>
-               <% } %>      
+               <% } else { %>
+                  <tr>
+                     <td><label for="summary"> Summary: </label></td>
+                     <td><textarea name="summary" cols="50" rows="5" ></textarea></td>
+                  </tr>
+               <% } %>
                <% if(data.rawText){ %>
                   <tr>
                      <td><label for="rawText"> Miscellaneous Information: </label></td>
-                     <td><textarea name="rawText" cols="50" rows="10" ><%=data.rawText %></textarea></td>
-   
+                     <td><textarea name="rawText" cols="50" rows="10" ><%=data.rawText %></textarea></td>   
+                  </tr>
+               <% } else { %>
+                  <tr>
+                     <td><label for="rawText"> Miscellaneous Information: </label></td>
+                     <td><textarea name="rawText" cols="50" rows="10" ></textarea></td>
                   </tr>
                <% } %>
                <tr>
@@ -195,8 +280,8 @@
             <h4 style="color:red">
                <%= error.msg %>
             </h4><br />
-            <% }) %>
-               <% } %>
+         <% }) %>
+      <% } %>
    </div>
 </body>
 

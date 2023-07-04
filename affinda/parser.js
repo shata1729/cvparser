@@ -38,15 +38,15 @@ const getParsedResumeJson = async (data) => {
       return res(null)
     }
     console.log("all raw data")
-    console.log(data.education)
+    console.log(data)
     if (data.name) {
       resume.firstName = data.name?.first
       resume.lastName = data.name?.last
     }
-    if(data.languages?.length){
+    if (data.languages?.length) {
       resume.languages = data.languages
     }
-    if(data.rawText){
+    if (data.rawText) {
       resume.rawText = data.rawText
     }
     resume.phoneNumbers = []
@@ -68,13 +68,11 @@ const getParsedResumeJson = async (data) => {
       data.education.forEach((edu) => {
         resume.education.push({
           organization: edu.organization ? edu.organization : '',
-          degree: `${
-            edu.accreditation?.education ? edu.accreditation?.education : ''
-          } ${
-            edu.accreditation?.educationLevel
+          degree: `${edu.accreditation?.education ? edu.accreditation?.education : ''
+            } ${edu.accreditation?.educationLevel
               ? edu.accreditation?.educationLevel
               : ''
-          }`,
+            }`,
           grade: edu.grade?.value ? edu.grade.value : '',
           location: edu.location?.formatted ? edu.location?.formatted : '',
           period: edu.dates?.rawText ? edu.dates?.rawText : '',
@@ -84,14 +82,16 @@ const getParsedResumeJson = async (data) => {
 
     resume.profession = data.profession ? data.profession : ''
     resume.linkedin = data.linkedin ? data.linkedin : ''
-    resume.location = {postalCode:data.location?.postalCode,
-      state:data.location?.state,
-      country:data.location?.country,
-      city:data.location?.city}
+    resume.location = {
+      postalCode: data.location?.postalCode,
+      state: data.location?.state,
+      country: data.location?.country,
+      city: data.location?.city
+    }
     resume.workExperience = []
     if (data.workExperience.length) {
       data.workExperience.forEach((we) => {
-        let i=1;
+        let i = 1;
         resume.workExperience.push({
           organization: we.organization ? we.organization : '',
           jobTitle: we.jobTitle ? we.jobTitle : '',
@@ -110,12 +110,20 @@ const getParsedResumeJson = async (data) => {
     resume.summary = []
     if (data.sections.length) {
       data.sections.forEach((section) => {
-        let i=1;
-        if(section.sectionType == 'PersonalDetails'){
-          resume.personalDetails.push(section.text)
+        let i = 1;
+        if (section.sectionType == 'PersonalDetails') {
+          if (!resume.personalDetails.toString().includes(section.text)) {
+            console.log("resume.personalDetails")
+            console.log(resume.personalDetails)
+            console.log("section.text")
+            console.log(section.text)
+            resume.personalDetails.push(section.text)
+          }
         }
-        if(section.sectionType == 'Summary'){
-          resume.summary.push(section.text)
+        if (section.sectionType == 'Summary') {
+          if(!resume.summary.toString().includes(section.text)){
+            resume.summary.push(section.text)
+          }
         }
       })
     }
@@ -153,4 +161,4 @@ const getParsedResumeJson = async (data) => {
 //     console.error(err);
 // });
 
-module.exports = {getParsedResumeJson}
+module.exports = { getParsedResumeJson }
